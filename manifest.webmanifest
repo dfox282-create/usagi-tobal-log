@@ -1,0 +1,42 @@
+{
+  "id": "./",
+  "name": "⚔️ 우사기 토벌 일지",
+  "short_name": "토벌일지",
+  "description": "치이카와 우사기 굿즈를 품고·기다리고·정리하는 손바닥 토벌 수첩",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "start_url": "./chiikawa-tobal-log.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#FFF9E8",
+  "theme_color": "#FFF9E8",
+  "categories": ["lifestyle", "shopping"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
