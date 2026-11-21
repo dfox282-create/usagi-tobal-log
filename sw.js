@@ -3,11 +3,12 @@
    홈 화면에 추가한 뒤에도 인터넷 없이 앱 껍데기가 열리도록
    수첩 HTML과 아이콘만 담아 둡니다. (자료는 늘 기기 localStorage에)
    ============================================================ */
-var CACHE = 'usagi-tobal-v1';
+var CACHE = 'usagi-tobal-v2';   // 2026-11-21 멀티 사진·슬라이드 판
 var SHELL = [
   './',
   './chiikawa-tobal-log.html',
   './manifest.webmanifest',
+  './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-180.png'

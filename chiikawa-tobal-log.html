@@ -778,19 +778,6 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 .chip.on{color:var(--ink);border-color:var(--ink);background:#FFFDF4}
 .chip .c-lbl,.s-opt .c-lbl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.media-row{display:flex;gap:12px;align-items:center;margin-bottom:12px}
-.media-prev{
-  width:66px;height:66px;flex:none;border-radius:6px;
-  display:grid;place-items:center;font-size:28px;overflow:hidden;
-  background:linear-gradient(160deg,#FFFDF3,#FFF3C9);
-  border:1px solid var(--line);
-  box-shadow:0 1px 3px rgba(150,130,80,.14);
-  transform:rotate(-1.5deg);
-}
-.media-prev img{width:100%;height:100%;object-fit:cover}
-.media-side{flex:1;min-width:0}
-.media-side .m-title{font-family:var(--hand);font-size:13.5px;color:var(--ink-2)}
-.media-side .m-sub{font-family:var(--hand);font-size:12.5px;color:var(--pencil-2);line-height:1.4;margin-bottom:7px}
 .media-btns{display:flex;gap:5px;flex-wrap:wrap}
 .mini{
   padding:6px 10px;border-radius:7px;
@@ -916,7 +903,31 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 .crop-zoom::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:#FFFDF3;border:2.4px solid #5D8FB3}
 .crop-hint{font-family:var(--hand);font-size:12.5px;color:var(--pencil-2);margin:7px 2px 0;line-height:1.45}
 .crop-tools{display:flex;gap:6px;margin-top:11px}
-.crop-tools .mini{flex:1;padding:9px 8px;text-align:center;font-size:14px}
+.crop-tools .mini{flex:1;padding:9px 8px;text-align:center;font-size:13.5px}
+.crop-tools .mini.on{border-color:var(--sky);background:#EAF6FD;color:var(--ink)}
+
+/* ---------------- 사진 여러 장 ---------------- */
+.photo-block{margin-bottom:12px}
+.photo-strip{display:flex;gap:6px;overflow-x:auto;padding:2px 1px 7px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.photo-strip::-webkit-scrollbar{display:none}
+.pthumb{
+  position:relative;flex:none;width:66px;height:66px;border-radius:7px;overflow:hidden;padding:0;
+  background:linear-gradient(160deg,#FFFDF3,#FFF3C9);border:1.5px solid var(--line);
+  box-shadow:0 1px 3px rgba(150,130,80,.14);
+}
+.pthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pthumb.on{border-color:var(--sky);box-shadow:0 0 0 2px #BFE7FB,0 1px 4px rgba(90,140,175,.22)}
+.pthumb .pt-main{
+  position:absolute;left:0;right:0;bottom:0;padding:1px 0 2px;text-align:center;
+  font-family:var(--hand);font-size:9.5px;line-height:1.3;color:#FFFDF3;background:rgba(74,64,52,.62);
+}
+.pthumb-add{
+  display:grid;place-items:center;font-size:22px;color:var(--pencil-2);
+  border-style:dashed;background:rgba(255,255,255,.62);
+}
+.photo-tools{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 7px}
+.photo-tools .mini{padding:5px 8px;font-size:12.5px}
+.photo-hint{font-family:var(--hand);font-size:12px;color:var(--pencil-2);line-height:1.45;margin:0 1px 7px}
 
 /* ---------------- 보기 전환 (수첩 ↔ 피드) ---------------- */
 .viewsw{display:flex;gap:5px;padding:11px 0 0}
@@ -989,6 +1000,14 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
   -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
 }
 .ftile .f-dot{position:absolute;left:5px;top:5px;width:7px;height:7px;border-radius:50%;box-shadow:0 0 0 1.6px rgba(255,253,243,.9)}
+/* 인스타처럼 '여러 장' 겹침 아이콘 */
+.ftile .f-multi{position:absolute;right:4px;top:4px;width:16px;height:16px;pointer-events:none}
+.ftile .f-multi i{
+  position:absolute;width:10px;height:10px;border:1.3px solid rgba(255,253,243,.96);border-radius:2.5px;
+  box-shadow:0 1px 3px rgba(60,50,40,.45);background:rgba(74,64,52,.18);
+}
+.ftile .f-multi i:first-child{left:0;bottom:0}
+.ftile .f-multi i:last-child{right:0;top:0}
 .f-dot.c-owned{background:var(--red)}
 .f-dot.c-incoming{background:var(--blue)}
 .f-dot.c-selling{background:var(--green)}
@@ -1014,7 +1033,34 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
   transform:rotate(-.8deg);
   margin-top:6px;
 }
+.post-photo{touch-action:pan-y}
 .post-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.post-photo .pp-emo{position:absolute;inset:0;display:grid;place-items:center;font-size:62px;line-height:1}
+.post-photo .pp-emo[hidden]{display:none}
+.pp-track{position:absolute;inset:0;display:flex;transition:transform .27s cubic-bezier(.22,1,.36,1)}
+.pp-track.dragging{transition:none}
+.pp-slide{flex:0 0 100%;width:100%;height:100%}
+.pp-slide img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
+.pp-nav{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:27px;height:27px;border-radius:50%;display:grid;place-items:center;
+  font-size:15px;line-height:1;color:var(--ink-2);
+  background:rgba(255,253,243,.88);border:1.2px solid var(--line);
+  box-shadow:0 1px 4px rgba(90,70,40,.18);
+}
+.pp-nav[hidden]{display:none}
+.pp-nav.off{opacity:.32}
+.pp-prev{left:5px}
+.pp-next{right:5px}
+.pp-count{
+  position:absolute;top:6px;left:7px;z-index:3;
+  padding:1px 7px 2px;border-radius:999px;
+  font-family:var(--hand);font-size:11px;line-height:1.35;color:#FFFDF3;background:rgba(74,64,52,.55);
+}
+.pp-count[hidden]{display:none}
+.pp-dots{position:absolute;left:0;right:0;bottom:7px;z-index:3;display:flex;justify-content:center;gap:4px}
+.pp-dot{width:6px;height:6px;padding:0;border-radius:50%;background:rgba(255,253,243,.55);box-shadow:0 0 0 1px rgba(74,64,52,.18)}
+.pp-dot.on{background:#FFFDF3;box-shadow:0 0 0 1.5px rgba(74,64,52,.3)}
 .post-head{display:flex;align-items:center;gap:7px;margin:16px 2px 0}
 .post-status{
   font-family:var(--hand);font-size:13px;font-weight:700;letter-spacing:.3px;
@@ -1234,18 +1280,20 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
       <p class="sheet-sub" id="formSub">오늘 품은 우사기를 한 줄 적어 두자.</p>
 
       <form id="goodsForm" novalidate style="margin-top:14px">
-        <div class="media-row">
-          <div class="media-prev" id="mediaPrev">🐰</div>
-          <div class="media-side">
-            <div class="m-title">사진 한 장 붙이기</div>
-            <div class="m-sub">고르면 정사각형으로 잘라서 붙여요. 안 붙여도 괜찮아요.</div>
-            <div class="media-btns">
-              <button type="button" class="mini" id="pickPhotoBtn">📷 사진</button>
-              <button type="button" class="mini" id="adjustPhotoBtn" hidden>✂️ 다시 조정</button>
-              <button type="button" class="mini" id="clearPhotoBtn" hidden>떼기</button>
-            </div>
-            <input type="file" id="photoInput" accept="image/*" hidden>
+        <div class="photo-block" id="photoBlock">
+          <div class="photo-strip" id="photoStrip" aria-label="이 글에 붙일 사진들"></div>
+          <div class="photo-tools" id="photoTools" hidden>
+            <button type="button" class="mini" id="adjustPhotoBtn">✂️ 다시 조정</button>
+            <button type="button" class="mini" id="photoFirstBtn">★ 대표로</button>
+            <button type="button" class="mini" id="photoLeftBtn" aria-label="앞 사진과 순서 바꾸기">← 앞으로</button>
+            <button type="button" class="mini" id="photoRightBtn" aria-label="뒤 사진과 순서 바꾸기">뒤로 →</button>
+            <button type="button" class="mini" id="clearPhotoBtn">✕ 빼기</button>
           </div>
+          <div class="photo-hint" id="photoHint">사진은 최대 5장까지 · 첫 사진이 피드 대표가 돼</div>
+          <div class="media-btns">
+            <button type="button" class="mini" id="pickPhotoBtn">📷 사진 추가</button>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" multiple hidden>
         </div>
 
         <div class="emoji-row" id="emojiRow" aria-label="이모지 고르기"></div>
@@ -1316,10 +1364,12 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
         <input type="range" class="crop-zoom" id="cropZoom" min="1" max="3" step="0.01" value="1" aria-label="사진 확대/축소">
         <span class="crop-zoomval" id="cropZoomVal">1.0x</span>
       </div>
-      <p class="crop-hint">손가락으로 밀어서 위치를 맞추고, 두 손가락으로 확대해 봐.</p>
+      <p class="crop-hint">손가락으로 밀어서 위치를 맞추고, 두 손가락으로 확대해 봐.<br>세로로 긴 구매내역도 <b>⤢ 전체 보기</b>로 한 번에 담을 수 있어.</p>
 
       <div class="crop-tools">
-        <button type="button" class="mini" id="cropRotate">↻ 90° 회전</button>
+        <button type="button" class="mini" id="cropFit">⤢ 전체 보기</button>
+        <button type="button" class="mini" id="cropFill">◻ 꽉 채우기</button>
+        <button type="button" class="mini" id="cropRotate">↻ 90°</button>
         <button type="button" class="mini" id="cropReset">⟲ 초기화</button>
       </div>
 
@@ -1337,7 +1387,14 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     <div class="sheet post-sheet" role="dialog" aria-modal="true" aria-labelledby="postName">
       <div class="sheet-tape" aria-hidden="true"></div>
       <button class="post-x" id="postClose" aria-label="상세 닫기">✕</button>
-      <div class="post-photo" id="postPhoto"></div>
+      <div class="post-photo" id="postPhoto">
+        <span class="pp-emo" id="postEmoji" aria-hidden="true">🐰</span>
+        <div class="pp-track" id="postTrack"></div>
+        <button type="button" class="pp-nav pp-prev" id="postPrev" aria-label="이전 사진" hidden>‹</button>
+        <button type="button" class="pp-nav pp-next" id="postNext" aria-label="다음 사진" hidden>›</button>
+        <span class="pp-count" id="postCount" hidden></span>
+        <div class="pp-dots" id="postDots"></div>
+      </div>
       <div class="post-head">
         <span class="post-status" id="postStatus">소장</span>
         <span class="post-date" id="postDate"></span>
@@ -1621,6 +1678,22 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
   function isSafeUrl(u) { return /^https?:\/\//i.test(String(u || '').trim()); }
 
+  /* ---------------- 사진 여러 장 ---------------- */
+  var MAX_PHOTOS = 5;        // 한 글에 붙일 수 있는 사진 수
+
+  // 예전 판의 g.photo(한 장)도 그대로 읽어 오도록 한 곳에서 모아 줍니다.
+  function photosOf(g) {
+    if (!g) return [];
+    var raw = Array.isArray(g.photos) ? g.photos : [];
+    var out = [];
+    for (var i = 0; i < raw.length; i++) {
+      if (typeof raw[i] === 'string' && raw[i]) out.push(raw[i]);
+    }
+    if (!out.length && typeof g.photo === 'string' && g.photo) out.push(g.photo);
+    return out;
+  }
+  function coverOf(g) { var p = photosOf(g); return p.length ? p[0] : ''; }
+
   /* ---------------- 폴더 기본값 ---------------- */
   var UNFILED_ID = '';
   var UNFILED = { id: UNFILED_ID, name: '미분류', emoji: '🗂️' };
@@ -1656,8 +1729,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
   /* ---------------- 첫 장 데이터 ---------------- */
   function seedData() {
-    var goods = [
-      { name: '기본 우사기 마스코트', status: 'owned', price: '', emoji: '🐰', memo: '언제나 함께하는 기본 마코', createdAt: '2026-11-10' },
+    var goods = [      { name: '기본 우사기 마스코트', status: 'owned', price: '', emoji: '🐰', memo: '언제나 함께하는 기본 마코', createdAt: '2026-11-10' },
       { name: '뿡사기 마스코트', status: 'owned', price: '', emoji: '💨', memo: '볼 때마다 귀여움', createdAt: '2026-11-10' },
       { name: '스시 우사기 & 셰프', status: 'owned', price: '', emoji: '🍣', memo: '스시 시리즈', createdAt: '2026-11-11' },
       { name: '토도로키 쇼토 × 우사기 피규어', status: 'owned', price: '41,000', emoji: '🔥', memo: '몽말라 라이브 득템', createdAt: '2026-11-13' },
@@ -1688,13 +1760,13 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
       return { id: uid('n'), title: n.title, date: n.date, memo: n.memo, url: n.url, createdAt: n.date };
     });
 
-    return { version: 3, folders: seedFolders(), goods: goods, notices: notices, cats: [] };
+    return { version: 4, folders: seedFolders(), goods: goods, notices: notices, cats: [] };
   }
 
   /* ---------------- 상태 ---------------- */
-  var state = { version: 3, folders: [], goods: [], notices: [], cats: [] };
+  var state = { version: 4, folders: [], goods: [], notices: [], cats: [] };
   var ui = { tab: 'log', filter: 'all', query: '', editingId: null, view: 'list', feedStatus: 'all' };
-  var pending = { emoji: '🐰', photo: '', photoSrc: '' };
+  var pending = { emoji: '🐰', photos: [], sel: 0, photo: '', photoSrc: '' };
   var activeId = null;
   var dialogCb = null;
   var toastTimer = null;
@@ -1707,6 +1779,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     var o = g || {};
     var st = catOf(o.status) ? o.status : 'owned';
     var cs = catOf(st) || STATUS.owned;
+    var shots = photosOf(o);
     return {
       id: o.id || uid('g'),
       name: String(o.name || '이름 없는 굿즈'),
@@ -1715,7 +1788,8 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
       memo: String(o.memo || ''),
       shop: String(o.shop || ''),
       emoji: String(o.emoji || cs.ico),
-      photo: String(o.photo || ''),
+      photos: shots,
+      photo: shots[0] || '',
       folderId: String(o.folderId || ''),
       createdAt: o.createdAt || todayISO()
     };
@@ -1775,7 +1849,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
       var d = JSON.parse(raw);
       if (!d || typeof d !== 'object') throw new Error('bad');
       state = {
-        version: 3,
+        version: 4,
         cats: normalizeCats(d.cats),
         folders: [],
         goods: [],
@@ -1811,8 +1885,199 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
   }
 
   function save() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+    syncPhotoStore();
+    // 저장고에 아직 다 안 담긴 사진이 있으면, 사진까지 localStorage에 같이 적어 둡니다 (중간에 꺼져도 안 사라지게)
+    var keep = photoStore.mode !== 'idb' || photoStore.pending > 0;
+    var payload;
+    try { payload = JSON.stringify(stateSnapshot(keep)); }
+    catch (e) { toast('수첩을 저장하지 못했어 😢'); return; }
+    try { localStorage.setItem(STORE_KEY, payload); }
+    catch (e) {
+      if (photoStore.mode === 'idb') {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(stateSnapshot(false))); } catch (e2) {}
+      }
+      toast('수첩이 꽉 찼어요 😢 사진을 줄이거나 백업 후 정리해 주세요');
+    }
+  }
+
+  // 사진이 저장고에 다 들어간 뒤에 부르는, 가벼운 저장 (사진은 빼고)
+  function saveMetaOnly() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(stateSnapshot(false))); }
+    catch (e) {}
+  }
+
+  /* ---------------- 사진 저장고 (IndexedDB) ----------------
+     사진은 여기에 담고, localStorage에는 줄·폴더·공지만 적어 둡니다.
+     브라우저가 IndexedDB를 막아 두면 예전처럼 사진까지 localStorage에 담아요. */
+  var PHOTO_DB = 'usagi_tobal_photos_v1';
+  var PHOTO_STORE = 'shots';
+  var photoStore = { mode: 'pending', db: null, mem: {}, pending: 0, broken: false };
+
+  function photoSig(list) {
+    var bits = [];
+    for (var i = 0; i < list.length; i++) bits.push(list[i].length + ':' + list[i].slice(-28));
+    return list.length + '#' + bits.join('|');
+  }
+
+  function photoDbOpen(cb) {
+    if (photoStore.db) { cb(photoStore.db); return; }
+    var idb = null;
+    try { idb = window.indexedDB || null; } catch (e) { idb = null; }
+    if (!idb || !idb.open) { photoStore.broken = true; cb(null); return; }
+    var req;
+    try { req = idb.open(PHOTO_DB, 1); } catch (e) { photoStore.broken = true; cb(null); return; }
+    var done = false;
+    function yes(db) { if (done) return; done = true; photoStore.db = db; cb(db); }
+    function no() { if (done) return; done = true; photoStore.broken = true; cb(null); }
+    req.onupgradeneeded = function (ev) {
+      var db = req.result || (ev && ev.target && ev.target.result);
+      try {
+        if (db && !db.objectStoreNames.contains(PHOTO_STORE)) db.createObjectStore(PHOTO_STORE);
+      } catch (e) {}
+    };
+    req.onsuccess = function () { yes(req.result); };
+    req.onerror = no;
+    req.onblocked = no;
+  }
+
+  // 기기에 담긴 사진 전부 읽기: { 굿즈id: [dataURL,...] }
+  function photoReadAll(cb) {
+    photoDbOpen(function (db) {
+      if (!db) { cb(null); return; }
+      var map = {};
+      try {
+        var store = db.transaction(PHOTO_STORE, 'readonly').objectStore(PHOTO_STORE);
+        var req = store.openCursor();
+        req.onsuccess = function () {
+          var cur = req.result;
+          if (cur) {
+            map[cur.key] = (cur.value && cur.value.list) ? cur.value.list : cur.value;
+            cur.continue();
+            return;
+          }
+          cb(map);
+        };
+        req.onerror = function () { cb(null); };
+      } catch (e) { cb(null); }
+    });
+  }
+
+  function photoWrite(puts, dels, cb) {
+    photoDbOpen(function (db) {
+      if (!db) { cb(false); return; }
+      var tx, store;
+      try {
+        tx = db.transaction(PHOTO_STORE, 'readwrite');
+        store = tx.objectStore(PHOTO_STORE);
+      } catch (e) { cb(false); return; }
+      var done = false;
+      function end(ok) { if (done) return; done = true; cb(ok); }
+      tx.oncomplete = function () { end(true); };
+      tx.onerror = function () { end(false); };
+      tx.onabort = function () { end(false); };
+      puts.forEach(function (rec) { try { store.put(rec, rec.id); } catch (e) {} });
+      dels.forEach(function (id) { try { store.delete(id); } catch (e) {} });
+    });
+  }
+
+  // 굿즈별 사진이 바뀜 것만 골라서 저장고에 다시 담아요
+  function syncPhotoStore() {
+    if (photoStore.mode !== 'idb' || !photoStore.db) return;
+    var puts = [], dels = [], seen = {};
+    state.goods.forEach(function (g) {
+      var id = g.id, shots = photosOf(g);
+      seen[id] = 1;
+      var sig = shots.length ? photoSig(shots) : '';
+      if (!sig) {
+        if (photoStore.mem[id]) { dels.push(id); delete photoStore.mem[id]; }
+        return;
+      }
+      if (photoStore.mem[id] === sig) return;
+      photoStore.mem[id] = sig;
+      puts.push({ id: id, list: shots.slice(), savedAt: Date.now() });
+    });
+    Object.keys(photoStore.mem).forEach(function (id) {
+      if (!seen[id]) { dels.push(id); delete photoStore.mem[id]; }
+    });
+    if (!puts.length && !dels.length) return;
+    photoStore.pending++;
+    photoWrite(puts, dels, function (okay) {
+      if (photoStore.pending > 0) photoStore.pending--;
+      if (!okay) {
+        photoStore.mode = 'ls';
+        saveFull();
+        toast('사진은 이 기기의 일반 저장소에 담을게 (용량이 적어)');
+        return;
+      }
+      // 사진이 이제 저장고에 있으니 localStorage에서는 걷어냅니다
+      if (photoStore.pending === 0) saveMetaOnly();
+    });
+  }
+
+  function saveFull() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(stateSnapshot(true))); }
     catch (e) { toast('수첩이 꽉 찼어요 😢 사진을 줄이거나 백업 후 정리해 주세요'); }
+  }
+
+  // localStorage에 적을 모습. 사진은 저장고에 있을 때는 빼고 숫자만 남깁니다.
+  function stateSnapshot(keepPhotos) {
+    return {
+      app: 'usagi-tobal-log',
+      version: 4,
+      savedAt: new Date().toISOString(),
+      cats: state.cats,
+      folders: state.folders,
+      notices: state.notices,
+      goods: state.goods.map(function (g) {
+        var shots = photosOf(g);
+        return {
+          id: g.id, name: g.name, status: g.status, price: g.price, memo: g.memo,
+          shop: g.shop, emoji: g.emoji, folderId: g.folderId, createdAt: g.createdAt,
+          photo: keepPhotos ? (shots[0] || '') : '',
+          photos: keepPhotos ? shots.slice() : [],
+          photoCount: shots.length
+        };
+      })
+    };
+  }
+
+  // 앱을 열면 저장고의 사진을 메모리로 올리고, 예전 localStorage 사진도 옮겨 담아요
+  function loadPhotos(quiet) {
+    if (photoStore.broken) { photoStore.mode = 'ls'; return; }
+    photoDbOpen(function (db) {
+      if (!db) { photoStore.mode = 'ls'; return; }
+      photoReadAll(function (map) {
+        if (!map) { photoStore.mode = 'ls'; return; }
+        photoStore.mem = {};
+        state.goods.forEach(function (g) {
+          var rec = map[g.id];
+          var stored = Array.isArray(rec) ? rec : ((rec && Array.isArray(rec.list)) ? rec.list : []);
+          var mine = photosOf(g);
+          var chosen, fromStore = false;
+          if (mine.length && photoSig(mine) !== photoSig(stored)) chosen = mine;
+          else if (stored.length) { chosen = stored; fromStore = true; }
+          else chosen = mine;
+          g.photos = chosen.slice();
+          g.photo = chosen[0] || '';
+          // 저장고에서 온 사진만 '이미 담김'으로 칩니다. localStorage에서 온 사진은 save()가 옮겨 담아요.
+          if (chosen.length && fromStore) photoStore.mem[g.id] = photoSig(chosen);
+          else delete photoStore.mem[g.id];
+        });
+        photoStore.mode = 'idb';
+        if (!quiet) save();   // 예전 localStorage에 남은 사진은 이때 저장고로 옮겨지고 걷혀요
+        render();
+      });
+    });
+  }
+
+  function photoUsage() {
+    var n = 0, bytes = 0;
+    state.goods.forEach(function (g) {
+      var shots = photosOf(g);
+      n += shots.length;
+      shots.forEach(function (d) { bytes += d.length; });
+    });
+    return { count: n, mb: bytes ? (bytes / 1048576).toFixed(1) : '0' };
   }
 
   /* ---------------- 폴더 기능 ---------------- */
@@ -2048,8 +2313,9 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
           (est ? '<span class="p-hint">예상</span>' : '') +
           esc(p) + '</span>'
       : '';
-    var thumb = g.photo
-      ? '<div class="thumb"><img src="' + esc(g.photo) + '" alt=""></div>'
+    var cover = coverOf(g);
+    var thumb = cover
+      ? '<div class="thumb"><img src="' + esc(cover) + '" alt=""></div>'
       : (g.emoji ? '<div class="thumb"><div class="emo">' + esc(g.emoji) + '</div></div>' : '');
     return '<button class="entry is-' + esc(g.status) + (s.custom ? ' is-custom' : '') + '" data-id="' + esc(g.id) + '">' +
       '<span class="dot" aria-hidden="true">' + dotMark(g.status) + '</span>' +
@@ -2220,12 +2486,17 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
   function feedTile(g) {
     var s = catOf(g.status) || STATUS.owned;
     var p = priceText(g.price);
-    var inner = g.photo
-      ? '<img src="' + esc(g.photo) + '" alt="">'
+    var shots = photosOf(g);
+    var inner = shots.length
+      ? '<img src="' + esc(shots[0]) + '" alt="">'
       : '<span class="f-emo"><span aria-hidden="true">' + esc(g.emoji || s.ico) + '</span>' +
         '<span class="f-ename">' + esc(g.name) + '</span></span>';
     var dot = STATUS[g.status] ? g.status : 'custom';
-    return '<button class="ftile" data-post="' + esc(g.id) + '" aria-label="' + esc(g.name) + ' 자세히 보기">' + inner +
+    var multi = shots.length > 1
+      ? '<span class="f-multi" role="img" aria-label="사진 ' + shots.length + '장"><i></i><i></i></span>'
+      : '';
+    return '<button class="ftile" data-post="' + esc(g.id) + '" aria-label="' + esc(g.name) +
+      (shots.length > 1 ? ' · 사진 ' + shots.length + '장' : '') + ' 자세히 보기">' + inner + multi +
       (ui.feedStatus === 'all' ? '<span class="f-dot c-' + esc(dot) + '" aria-hidden="true"></span>' : '') +
       (p ? '<span class="f-price">' + esc(p) + '</span>' : '') +
       '</button>';
@@ -2251,9 +2522,15 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
     var list = feedItems();
     var nmEx = ui.feedStatus === 'all' ? '전체' : catShort(ui.feedStatus);
-    var shots = list.filter(function (g) { return !!g.photo; }).length;
+    var shots = 0, multi = 0;
+    list.forEach(function (g) {
+      var n = photosOf(g).length;
+      shots += n;
+      if (n > 1) multi++;
+    });
     $('feedHead').innerHTML = '<b>' + esc(nmEx) + '</b> ' + list.length + '개' +
-      (list.length ? ' · 사진 ' + shots + '장' : '') +
+      (shots ? ' · 사진 ' + shots + '장' : '') +
+      (multi ? ' · 여러 장 ' + multi + '개' : '') +
       (ui.feedStatus === 'all' ? ' · 최근 담은 순' : '');
 
     $('feedGrid').innerHTML = list.map(feedTile).join('');
@@ -2273,6 +2550,84 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
   /* ---------------- 피드 게시물 상세 ---------------- */
   var postId = null;
+  var postShots = [];
+  var postIndex = 0;
+  var postDrag = null;
+
+  function renderPostShots(shots) {
+    postShots = (shots || []).slice();
+    postIndex = 0;
+    $('postTrack').innerHTML = postShots.map(function (src) {
+      return '<div class="pp-slide"><img src="' + esc(src) + '" alt=""></div>';
+    }).join('');
+    $('postDots').innerHTML = '';
+    postGo(0, true);
+  }
+
+  function postGo(i, instant) {
+    var n = postShots.length;
+    var track = $('postTrack');
+    if (!n) {
+      track.style.transform = '';
+      $('postCount').hidden = true;
+      $('postDots').hidden = true;
+      $('postPrev').hidden = true;
+      $('postNext').hidden = true;
+      return;
+    }
+    postIndex = i < 0 ? 0 : (i >= n ? n - 1 : i);
+    if (instant) {
+      track.classList.add('dragging');
+      track.style.transform = 'translateX(' + (-postIndex * 100) + '%)';
+      requestAnimationFrame(function () { track.classList.remove('dragging'); });
+    } else {
+      track.classList.remove('dragging');
+      track.style.transform = 'translateX(' + (-postIndex * 100) + '%)';
+    }
+    $('postCount').hidden = n < 2;
+    $('postCount').textContent = (postIndex + 1) + '/' + n;
+    $('postDots').hidden = n < 2;
+    $('postDots').innerHTML = n < 2 ? '' : postShots.map(function (_, k) {
+      return '<button type="button" class="pp-dot' + (k === postIndex ? ' on' : '') + '" data-dot="' + k +
+        '" aria-label="' + (k + 1) + '번째 사진"></button>';
+    }).join('');
+    $('postPrev').hidden = n < 2;
+    $('postNext').hidden = n < 2;
+    $('postPrev').classList.toggle('off', postIndex <= 0);
+    $('postNext').classList.toggle('off', postIndex >= n - 1);
+  }
+
+  function onPostDown(e) {
+    if (postShots.length < 2) return;
+    if (e.target && e.target.closest && e.target.closest('button')) return;
+    postDrag = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, moved: false };
+    try { $('postPhoto').setPointerCapture(e.pointerId); } catch (err) {}
+  }
+
+  function onPostMove(e) {
+    if (!postDrag || e.pointerId !== postDrag.id) return;
+    var dx = e.clientX - postDrag.x, dy = e.clientY - postDrag.y;
+    if (!postDrag.moved && Math.abs(dx) < 8) return;
+    if (Math.abs(dx) <= Math.abs(dy)) return;     // 세로로 쓸어내리면 그냥 스크림
+    postDrag.moved = true;
+    postDrag.dx = dx;
+    var track = $('postTrack');
+    track.classList.add('dragging');
+    track.style.transform = 'translateX(calc(' + (-postIndex * 100) + '% + ' + dx.toFixed(1) + 'px))';
+  }
+
+  function onPostUp(e) {
+    if (!postDrag || e.pointerId !== postDrag.id) return;
+    var dx = postDrag.dx, moved = postDrag.moved;
+    postDrag = null;
+    $('postTrack').classList.remove('dragging');
+    if (!moved) return;
+    var w = $('postPhoto').clientWidth || 280;
+    var limit = Math.max(30, w * 0.16);
+    if (dx <= -limit) postGo(postIndex + 1);
+    else if (dx >= limit) postGo(postIndex - 1);
+    else postGo(postIndex);
+  }
 
   function openPost(id) {
     var g = state.goods.find(function (x) { return x.id === id; });
@@ -2283,9 +2638,10 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     var p = priceText(g.price);
     var est = g.status === 'selling' || g.status === 'wish';
 
-    $('postPhoto').innerHTML = g.photo
-      ? '<img src="' + esc(g.photo) + '" alt="">'
-      : '<span aria-hidden="true">' + esc(g.emoji || s.ico) + '</span>';
+    var shots = photosOf(g);
+    $('postEmoji').textContent = g.emoji || s.ico;
+    $('postEmoji').hidden = shots.length > 0;
+    renderPostShots(shots);
 
     var ps = $('postStatus');
     ps.textContent = s.feed || s.label;
@@ -2466,7 +2822,8 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     $('sheetMeta').textContent = bits.join(' · ');
 
     var th = $('sheetThumb');
-    th.innerHTML = g.photo ? '<img src="' + esc(g.photo) + '" alt="">' : esc(g.emoji || (catOf(g.status) || STATUS.owned).ico);
+    var cover = coverOf(g);
+    th.innerHTML = cover ? '<img src="' + esc(cover) + '" alt="">' : esc(g.emoji || (catOf(g.status) || STATUS.owned).ico);
 
     $('statusQuick').innerHTML = allCatKeys().map(function (k) {
       var s = catOf(k);
@@ -2520,11 +2877,60 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
   }
 
   function renderMediaPrev() {
-    $('mediaPrev').innerHTML = pending.photo
-      ? '<img src="' + esc(pending.photo) + '" alt="">'
-      : esc(pending.emoji);
-    $('clearPhotoBtn').hidden = !pending.photo;
-    $('adjustPhotoBtn').hidden = !pending.photo;
+    var list = pending.photos || [];
+    if (pending.sel >= list.length) pending.sel = Math.max(0, list.length - 1);
+    if (pending.sel < 0) pending.sel = 0;
+
+    var html = list.map(function (it, i) {
+      return '<button type="button" class="pthumb' + (i === pending.sel ? ' on' : '') + '" data-pthumb="' + i + '"' +
+        ' aria-label="' + (i + 1) + '번째 사진' + (i === 0 ? ' (대표)' : '') + ' · ' + i + '번">' +
+        '<img src="' + esc(it.data) + '" alt="">' +
+        (i === 0 ? '<span class="pt-main">대표</span>' : '') +
+        '</button>';
+    }).join('');
+    if (list.length < MAX_PHOTOS) {
+      html += '<button type="button" class="pthumb pthumb-add" data-padd="1" aria-label="사진 추가">＋</button>';
+    }
+    $('photoStrip').innerHTML = html;
+
+    var has = list.length > 0;
+    $('photoTools').hidden = !has;
+    $('adjustPhotoBtn').hidden = !has;
+    $('clearPhotoBtn').hidden = !has;
+    $('photoFirstBtn').hidden = !has || pending.sel === 0;
+    $('photoLeftBtn').hidden = !has || pending.sel === 0;
+    $('photoRightBtn').hidden = !has || pending.sel === list.length - 1;
+    $('pickPhotoBtn').hidden = list.length >= MAX_PHOTOS;
+    $('photoHint').textContent = has
+      ? list.length + '/' + MAX_PHOTOS + '장 · 첫 사진이 피드 대표야 · 사진을 눌러 고르고 ✂️로 다시 잘라'
+      : '사진은 최대 ' + MAX_PHOTOS + '장까지 · 첫 사진이 피드 대표가 돼';
+
+    syncPendingPhoto();
+    renderEmojiRow();
+  }
+
+  function syncPendingPhoto() {
+    var first = pending.photos[0];
+    pending.photo = first ? first.data : '';
+    pending.photoSrc = (pending.photos[pending.sel] && pending.photos[pending.sel].src) || '';
+  }
+
+  function movePhoto(from, to) {
+    var n = pending.photos.length;
+    if (from < 0 || from >= n || to < 0 || to >= n || from === to) return;
+    var it = pending.photos.splice(from, 1)[0];
+    pending.photos.splice(to, 0, it);
+    pending.sel = to;
+    renderMediaPrev();
+    toast(to === 0 ? '이 사진을 대표로 세웠어 ★' : '사진 순서를 바꿨어');
+  }
+
+  function dropPhoto(idx) {
+    if (idx < 0 || idx >= pending.photos.length) return;
+    pending.photos.splice(idx, 1);
+    if (pending.sel >= pending.photos.length) pending.sel = Math.max(0, pending.photos.length - 1);
+    renderMediaPrev();
+    toast(pending.photos.length ? '사진을 뺐어' : '사진을 다 뺐어 · 이제 이모지가 대표야');
   }
 
   function renderStatusChips(sel) {
@@ -2552,10 +2958,13 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
     var st0 = g ? catKey(g.status)
       : (statusKey && catOf(statusKey) ? statusKey : 'owned');
+    var shots = g ? photosOf(g) : [];
     pending = {
       emoji: g ? (g.emoji || (catOf(st0) || STATUS.owned).ico) : (catOf(st0) || STATUS.owned).ico,
-      photo: g ? (g.photo || '') : '',
-      photoSrc: ''
+      photos: shots.map(function (d) { return { data: d, src: d }; }),
+      sel: 0,
+      photo: shots[0] || '',
+      photoSrc: shots[0] || ''
     };
     renderEmojiRow();
     renderMediaPrev();
@@ -2587,11 +2996,14 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
   /* ---------------- 사진 조정(크롭) ---------------- */
   var CROP_SRC_MAX = 2000;   // 큰 사진은 이 크기까지만 다뤄요 (메모리·속도)
   var CROP_OUT = 640;        // 저장할 정사각형 한 변
+  var CROP_TALL = 1.8;       // 이보다 길쭉한 사진(구매내역 캡처 등)은 처음에 '전체 보기'
   var crop = {
     img: null, url: '', natW: 0, natH: 0, frame: 280,
     zoom: 1, rot: 0, offX: 0, offY: 0,
     isOpen: false
   };
+  var cropTarget = { mode: 'add' };   // add: 새 사진 / edit: 고른 사진 다시 조정
+  var cropQueue = [];
 
   function cropNum(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
 
@@ -2601,6 +3013,16 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     return Math.max(crop.frame / crop.natW, crop.frame / crop.natH);
   }
   function cropScale() { return cropCover() * crop.zoom; }
+
+  // 사진 전체가 프레임 안에 다 들어오는 배율 (긴 캡처 사진용)
+  function cropFitZoom() {
+    if (!crop.natW || !crop.natH || !crop.frame) return 1;
+    var fit = Math.min(crop.frame / crop.natW, crop.frame / crop.natH);
+    var cover = cropCover();
+    if (!cover) return 1;
+    var z = fit / cover;
+    return Math.min(1, Math.max(0.02, z));
+  }
 
   // 프레임 밖으로 빈 종이가 보이지 않게 위치를 가둡니다
   function cropClamp() {
@@ -2632,11 +3054,16 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
   function cropSyncZoomUI() {
     var zr = $('cropZoom');
+    var lo = cropFitZoom();
     if (zr) {
+      zr.min = String(lo.toFixed(3));
       zr.value = String(crop.zoom);
-      zr.style.setProperty('--fill', ((crop.zoom - 1) / 2 * 100).toFixed(1) + '%');
+      var span = 3 - lo;
+      zr.style.setProperty('--fill', (span > 0 ? ((crop.zoom - lo) / span * 100) : 0).toFixed(1) + '%');
     }
     $('cropZoomVal').textContent = crop.zoom.toFixed(2).replace(/\.?0+$/, '') + 'x';
+    $('cropFit').classList.toggle('on', crop.zoom <= lo + 0.001);
+    $('cropFill').classList.toggle('on', Math.abs(crop.zoom - 1) < 0.001);
   }
 
   // 지금 보이는 그대로 640×640 JPEG를 만들어요
@@ -2667,7 +3094,6 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     crop.img = img;
     crop.natW = img.naturalWidth || img.width;
     crop.natH = img.naturalHeight || img.height;
-    pending.photoSrc = srcUrl;
 
     $('cropImg').src = srcUrl;
     crop.isOpen = true;
@@ -2677,7 +3103,10 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
     var st = $('cropStage');
     crop.frame = Math.round(st.clientWidth || st.getBoundingClientRect().width || 280) || 280;
-    crop.zoom = 1; crop.rot = 0; crop.offX = 0; crop.offY = 0;
+    crop.rot = 0; crop.offX = 0; crop.offY = 0;
+    var side = Math.max(1, Math.min(crop.natW, crop.natH));
+    var long = Math.max(crop.natW, crop.natH) / side;
+    crop.zoom = long >= CROP_TALL ? cropFitZoom() : 1;
     cropClamp();
     cropPaint();
     cropSyncZoomUI();
@@ -2694,22 +3123,54 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
   function applyCrop() {
     if (!crop.img) { closeCrop(); return; }
-    try {
-      pending.photo = cropRender();
-    } catch (e) {
-      toast('사진을 저장하지 못했어');
-      return;
+    var data;
+    try { data = cropRender(); }
+    catch (e) { toast('사진을 저장하지 못했어'); return; }
+
+    if (cropTarget && cropTarget.mode === 'edit') {
+      var it = pending.photos[cropTarget.index];
+      if (it) { it.data = data; it.src = crop.url || it.src; }
+    } else {
+      if (pending.photos.length >= MAX_PHOTOS) {
+        toast('사진은 ' + MAX_PHOTOS + '장까지 담을 수 있어');
+        closeCrop();
+        return;
+      }
+      pending.photos.push({ data: data, src: crop.url || data });
+      pending.sel = pending.photos.length - 1;
     }
     renderMediaPrev();
-    renderEmojiRow();
     closeCrop();
-    toast('사진을 붙였어 ✂️');
+    toast(cropTarget && cropTarget.mode === 'edit' ? '사진을 다시 잘랐어 ✂️' : '사진을 붙였어 ✂️');
+    startNextCrop();
+  }
+
+  function startNextCrop() {
+    if (!cropQueue.length) return;
+    beginPhotoCrop(cropQueue.shift());
+  }
+
+  function enqueuePhotos(files) {
+    var list = Array.prototype.slice.call(files || []);
+    list = list.filter(function (f) { return f && /^image\//.test(f.type || ''); });
+    if (!list.length) { toast('사진 파일만 붙일 수 있어'); return; }
+    var room = MAX_PHOTOS - pending.photos.length;
+    if (room <= 0) { toast('사진은 ' + MAX_PHOTOS + '장까지 담을 수 있어'); return; }
+    if (list.length > room) {
+      toast('사진은 ' + MAX_PHOTOS + '장까지라 ' + room + '장만 담을게');
+      list = list.slice(0, room);
+    }
+    if (cropQueue.length) { toast('사진 ' + list.length + '장은 앞의 사진을 마저 잘라야 해'); return; }
+    cropQueue = cropQueue.concat(list);
+    if (!crop.isOpen) startNextCrop();
   }
 
   // 고른 사진을 바로 저장하지 않고, 조정 모달을 먼저 띄웁니다
-  function beginPhotoCrop(file) {
+  function beginPhotoCrop(file, target) {
     if (!file) return;
     if (!/^image\//.test(file.type || '')) { toast('사진 파일만 붙일 수 있어'); return; }
+    cropTarget = { mode: 'add' };
+    if (target && target.mode === 'edit') cropTarget = { mode: 'edit', index: target.index || 0 };
     var reader = new FileReader();
     reader.onload = function (ev) {
       var src = ev.target.result;
@@ -2745,8 +3206,10 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
   // 이미 붙은 사진 다시 조정 (원본이 메모리에 있으면 원본으로)
   function reopenCrop() {
-    var url = pending.photoSrc || pending.photo;
-    if (!url) { toast('먼저 사진을 붙여 줘'); return; }
+    var it = pending.photos[pending.sel];
+    if (!it) { toast('먼저 사진을 붙여 줘'); return; }
+    var url = it.src || it.data;
+    cropTarget = { mode: 'edit', index: pending.sel };
     var img = new Image();
     img.onload = function () { cropOpen(url, img); };
     img.onerror = function () { toast('사진을 다시 열지 못했어'); };
@@ -2804,7 +3267,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
     if (gesture.mode === 'pinch' && p.length >= 2) {
       var a = p[0], b = p[1];
-      var z = cropNum(gesture.startZoom * (ptrDist(a, b) / gesture.startDist), 1, 3);
+      var z = cropNum(gesture.startZoom * (ptrDist(a, b) / gesture.startDist), cropFitZoom(), 3);
       var ratio = z / gesture.startZoom;
       crop.zoom = z;
       var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
@@ -2839,7 +3302,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     e.preventDefault();
     var rel = cropMidRel(e.clientX, e.clientY);
     var oldZoom = crop.zoom;
-    var z = cropNum(crop.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08), 1, 3);
+    var z = cropNum(crop.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08), cropFitZoom(), 3);
     if (z === oldZoom) return;
     var ratio = z / oldZoom;
     crop.zoom = z;
@@ -2867,8 +3330,9 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     if (ui.editingId) {
       var g = state.goods.find(function (x) { return x.id === ui.editingId; });
       if (g) {
+        var next = pending.photos.map(function (it) { return it.data; });
         g.name = name; g.status = st; g.price = price; g.memo = memo; g.shop = shop;
-        g.emoji = pending.emoji; g.photo = pending.photo; g.createdAt = date;
+        g.emoji = pending.emoji; g.photos = next; g.photo = next[0] || ''; g.createdAt = date;
         g.folderId = fid;
         save(); render();
         closeOverlay($('formOverlay'));
@@ -2876,9 +3340,10 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
         return;
       }
     }
+    var shots = pending.photos.map(function (it) { return it.data; });
     state.goods.unshift({
       id: uid('g'), name: name, status: st, price: price, memo: memo, shop: shop,
-      emoji: pending.emoji, photo: pending.photo, folderId: fid, createdAt: date
+      emoji: pending.emoji, photos: shots, photo: shots[0] || '', folderId: fid, createdAt: date
     });
     if (ui.view === 'feed') { ui.feedStatus = st; saveUI(); }
     save(); render();
@@ -2915,7 +3380,9 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
 
   /* ---------------- 백업 ---------------- */
   function exportJSON() {
-    var payload = { app: 'usagi-tobal-log', version: 3, exportedAt: new Date().toISOString(), folders: state.folders, goods: state.goods, notices: state.notices, cats: state.cats };
+    // 백업에는 사진도 한 장도 빠지지 않게 전부 담습니다.
+    var payload = stateSnapshot(true);
+    payload.exportedAt = new Date().toISOString();
     var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -2941,7 +3408,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
         yes: '불러오기',
         onYes: function () {
           state = {
-            version: 3,
+            version: 4,
             cats: normalizeCats(d.cats),
             folders: [],
             goods: [],
@@ -2968,12 +3435,14 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     try { bytes = (localStorage.getItem(STORE_KEY) || '').length; } catch (e) {}
     var kb = bytes ? (bytes / 1024).toFixed(1) : '0';
     var keys = allCatKeys();
+    var ph = photoUsage();
     $('statBox').innerHTML = keys.map(function (k) {
       var s = catOf(k) || STATUS.owned;
       return '<span>' + esc(s.ico) + ' ' + esc(s.feed || s.label) + ' <b>' + c[k] + '</b></span>';
     }).join('') +
       '<span style="grid-column:1/-1;opacity:.7;margin-top:4px">수첩 무게 약 ' + kb + 'KB · 폴더 ' + state.folders.length +
-      '칸 · 보관 칸 ' + keys.length + '개 · 이 기기에만 저장</span>';
+      '칸 · 보관 칸 ' + keys.length + '개 · 사진 ' + ph.count + '장 약 ' + ph.mb + 'MB (' +
+      (photoStore.mode === 'idb' ? '큰 저장소에 넉넉히' : '이 기기 저장소에') + ') · 이 기기에만 저장</span>';
   }
 
   /* ---------------- 탭 ---------------- */
@@ -3028,6 +3497,20 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
       closeOverlay(postOverlay);
       setTimeout(function () { openForm(id); }, 130);
     });
+    $('postPrev').addEventListener('click', function () { postGo(postIndex - 1); });
+    $('postNext').addEventListener('click', function () { postGo(postIndex + 1); });
+    $('postDots').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-dot]');
+      if (!b) return;
+      var i = parseInt(b.getAttribute('data-dot'), 10);
+      postGo(isNaN(i) ? 0 : i);
+    });
+    var pp = $('postPhoto');
+    pp.addEventListener('pointerdown', onPostDown);
+    pp.addEventListener('pointermove', onPostMove);
+    pp.addEventListener('pointerup', onPostUp);
+    pp.addEventListener('pointercancel', onPostUp);
+    pp.addEventListener('lostpointercapture', onPostUp);
 
     // 카테고리 만들기/고치기
     var catOverlay = $('catOverlay');
@@ -3168,15 +3651,23 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     $('goodsForm').addEventListener('submit', submitGoods);
     $('pickPhotoBtn').addEventListener('click', function () { $('photoInput').click(); });
     $('photoInput').addEventListener('change', function (e) {
-      var f = e.target.files && e.target.files[0];
+      var files = e.target.files;
       e.target.value = '';
-      if (f) beginPhotoCrop(f);
+      if (files && files.length) enqueuePhotos(files);
+    });
+    $('photoStrip').addEventListener('click', function (e) {
+      if (e.target.closest('[data-padd]')) { $('photoInput').click(); return; }
+      var b = e.target.closest('[data-pthumb]');
+      if (!b) return;
+      var i = parseInt(b.getAttribute('data-pthumb'), 10);
+      pending.sel = isNaN(i) ? 0 : i;
+      renderMediaPrev();
     });
     $('adjustPhotoBtn').addEventListener('click', reopenCrop);
-    $('clearPhotoBtn').addEventListener('click', function () {
-      pending.photo = ''; pending.photoSrc = '';
-      renderMediaPrev(); renderEmojiRow(); toast('사진을 뗐어');
-    });
+    $('photoFirstBtn').addEventListener('click', function () { movePhoto(pending.sel, 0); });
+    $('photoLeftBtn').addEventListener('click', function () { movePhoto(pending.sel, pending.sel - 1); });
+    $('photoRightBtn').addEventListener('click', function () { movePhoto(pending.sel, pending.sel + 1); });
+    $('clearPhotoBtn').addEventListener('click', function () { dropPhoto(pending.sel); });
 
     // 사진 조정 모달
     var cstage = $('cropStage');
@@ -3186,10 +3677,23 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     cstage.addEventListener('pointercancel', onCropUp);
     cstage.addEventListener('lostpointercapture', onCropUp);
     cstage.addEventListener('wheel', onCropWheel, { passive: false });
-    $('cropCancel').addEventListener('click', closeCrop);
+    $('cropCancel').addEventListener('click', function () {
+      cropQueue = [];
+      closeCrop();
+    });
     $('cropApply').addEventListener('click', applyCrop);
+    $('cropFit').addEventListener('click', function () {
+      crop.zoom = cropFitZoom(); crop.offX = 0; crop.offY = 0;
+      cropClamp(); cropPaint(); cropSyncZoomUI();
+      toast('사진 전체가 보이게 맞췄어 ⤢');
+    });
+    $('cropFill').addEventListener('click', function () {
+      crop.zoom = 1; crop.offX = 0; crop.offY = 0;
+      cropClamp(); cropPaint(); cropSyncZoomUI();
+      toast('정사각형을 꽉 채웠어 ◻');
+    });
     $('cropZoom').addEventListener('input', function (e) {
-      crop.zoom = cropNum(parseFloat(e.target.value) || 1, 1, 3);
+      crop.zoom = cropNum(parseFloat(e.target.value) || 1, cropFitZoom(), 3);
       cropClamp(); cropPaint(); cropSyncZoomUI();
     });
     $('cropRotate').addEventListener('click', function () {
@@ -3202,16 +3706,14 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
       crop.zoom = 1; crop.rot = 0; crop.offX = 0; crop.offY = 0;
       cropClamp(); cropPaint(); cropSyncZoomUI();
       toast('처음 상태로 돌렸어');
-    });
-    var cropOverlay = $('cropOverlay');
+    });    var cropOverlay = $('cropOverlay');
     cropOverlay.addEventListener('click', function (e) { if (e.target === cropOverlay) closeCrop(); });
     $('emojiRow').addEventListener('click', function (e) {
       var b = e.target.closest('[data-emoji]');
       if (!b) return;
       pending.emoji = b.getAttribute('data-emoji');
-      pending.photo = '';
-      pending.photoSrc = '';
-      renderMediaPrev(); renderEmojiRow();
+      renderEmojiRow();
+      if (pending.photos.length) toast('사진을 다 빼면 이 아이콘이 대표가 돼');
     });
     $('statusChips').addEventListener('click', function (e) {
       var b = e.target.closest('[data-chip]');
@@ -3278,6 +3780,12 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     });
 
     document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        if (!$('postOverlay').hidden && postShots.length > 1) {
+          postGo(postIndex + (e.key === 'ArrowRight' ? 1 : -1));
+          return;
+        }
+      }
       if (e.key !== 'Escape') return;
       if (!$('dialogOverlay').hidden) return closeDialog();
       if (!$('cropOverlay').hidden) return closeCrop();
@@ -3289,7 +3797,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
     });
 
     window.addEventListener('storage', function (e) {
-      if (e.key === STORE_KEY) { load(); render(); }
+      if (e.key === STORE_KEY) { load(); render(); loadPhotos(true); }
       else if (e.key === UI_KEY) { loadUI(); renderFolders(); }
     });
 
@@ -3306,6 +3814,7 @@ body.scrolling .write-btn{opacity:.3;transform:rotate(-6deg) scale(.88)}
   bind();
   render();
   setView(ui.view);
+  loadPhotos();
 })();
 
 /* ============================================================
